@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Today Task</h1>
+<hr />
+<a href="{% url 'todos:create' %}" class="btn btn-primary btn-block">New Task</a>
+{% if todos %}
+<table class="table mt-2 table-bordered text-center">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">No.</th>
+      <th scope="col">Task</th>
+      <th scope="col">Status</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for todo in todos %}
+    <tr 
+      class="
+      {% if todo.status == 'VI' %} 
+        table-danger 
+      {% elif todo.status == 'I' %}
+        table-warning
+      {% else %}
+        table-info
+      {% endif %}"
+      >
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{todo.task}}</td>
+      <td>{{todo.get_status_display}}</td>
+      <td>
+        <form action="{% url 'todos:delete' todo.id %}" method="post">
+          {% csrf_token %}<input type="submit" class="btn btn-outline-danger" value="Delete" />
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<h4 class="mt-5 text-center text-muted">Yeay! 🎉 🎉 No Task Today</h4>
+{% endif %}
+{% endblock content %}
